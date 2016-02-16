@@ -55,6 +55,18 @@ class Cluster(object):
 
     pepper = property(get_pepper_client, None, None)
 
+    def get_cloudera_manager(self):
+        if six.PY2:
+            from cm_api.api_client import ApiResource
+            if not self._cmanager:
+                cm_host = self.instances[0].ip
+                self._cmanager = ApiResource(cm_host, username="admin", password="admin")
+            return self._cmanager
+        else:
+            raise DEC2Exception("Cloudera Manager API doesn't work on PY3")
+
+    cmanager = property(get_cloudera_manager, None, None)
+
     def salt_call(self, target, module, args=None):
         args = [] or args
         try:
