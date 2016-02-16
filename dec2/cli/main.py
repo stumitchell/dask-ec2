@@ -273,3 +273,4 @@ def print_state(output):
 
 
 from .daskd import *
+from .cloudera import *
