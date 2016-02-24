@@ -17,7 +17,6 @@ class Cluster(object):
 
     def __init__(self, instances=None):
         self._pepper = None
-        self._cmanager = None
         self.instances = instances or []
 
     @classmethod
@@ -41,6 +40,11 @@ class Cluster(object):
         for instance in instances:
             self.instances.append(Instance.from_dict(instance))
         return self
+
+    def get_head(self):
+        return self.instances[0]
+
+    head = property(get_head, None, None)
 
     def get_pepper_client(self):
         if not self._pepper:
@@ -76,7 +80,10 @@ class Cluster(object):
                 "Could not connect to salt server. Try `dec2 provision` and try again")
 
     def append(self, instance):
-        self.instances.append(instance)
+        if isinstance(instance, Instance):
+            self.instances.append(instance)
+        else:
+            raise DEC2Exception("Can only append dec2.Instance types to the cluster nodes")
 
     def set_username(self, username):
         for instance in self.instances:
@@ -89,7 +96,8 @@ class Cluster(object):
     def check_ssh(self):
         ret = {}
         for instance in self.instances:
-            ret[instance.ip] = instance.check_ssh()
+            address = "{}:{}".format(instance.ip, instance.port)
+            ret[address] = instance.check_ssh()
         return ret
 
     def to_dict(self):
@@ -98,3 +106,10 @@ class Cluster(object):
         for instance in self.instances:
             ret["instances"].append(instance.to_dict())
         return ret
+
+    def to_file(self, filepath):
+        with open(filepath, "w") as f:
+            yaml.safe_dump(self.to_dict(), f, default_flow_style=False)
+
+    def __repr__(self):
+        return str(self.to_dict())
