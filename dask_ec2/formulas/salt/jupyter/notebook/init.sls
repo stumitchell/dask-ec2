@@ -5,6 +5,15 @@ include:
   - jupyter
   - supervisor
 
+jupyter_notebook_config.py:
+  file.managed:
+    - name: {{ jupyter_config_dir ~ 'jupyter_notebook_config.py' }}
+    - makedirs: true
+    - source: salt://jupyter/templates/jupyter_notebook_config_py
+    - template: jinja
+    - user: {{ user }}
+    - group: {{ user }}
+
 jupyter-notebook.conf:
   file.managed:
     - name: {{ conf_d }}/jupyter-notebook.conf
