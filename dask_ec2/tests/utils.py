@@ -13,7 +13,7 @@ from dask_ec2.cli.main import cli
 @pytest.yield_fixture(scope="module")
 def driver():
     from dask_ec2.ec2 import EC2
-    driver = EC2(region="us-east-1", default_vpc=False, default_subnet=False, test=False)
+    driver = EC2(region="us-east-1", test=False)
 
     yield driver
 
