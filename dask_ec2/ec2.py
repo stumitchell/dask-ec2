@@ -19,8 +19,8 @@ class EC2(object):
                  iaminstance_name=None, test=True):
         self.ec2 = boto3.resource("ec2", region_name=region)
         self.client = boto3.client("ec2", region_name=region)
-        self.vpc_id = vpc_id if vpc_id else self.get_default_vpc()
-        self.subnet_id = subnet_id if subnet_id else self.get_default_subnet()
+        self.vpc_id = vpc_id if vpc_id is not None else self.get_default_vpc()
+        self.subnet_id = subnet_id if subnet_id is not None else self.get_default_subnet()
         self.iaminstance_name = iaminstance_name
 
         if test:

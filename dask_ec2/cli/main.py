@@ -198,7 +198,7 @@ def destroy(ctx, filepath, yes, region_name):
 
     question = 'Are you sure you want to destroy the cluster?'
     if yes or click.confirm(question):
-        driver = EC2(region=region_name, vpc_id='_blank', subnet_id='_blank')
+        driver = EC2(region=region_name, vpc_id='', subnet_id='')
         #needed if there is no default vpc or subnet
         ids = [i.uid for i in cluster.instances]
         click.echo("Terminating instances")
