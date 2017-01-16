@@ -15,12 +15,14 @@ DEFAULT_SG_GROUP_NAME = "dask-ec2-default"
 
 class EC2(object):
 
-    def __init__(self, region, vpc_id=None, subnet_id=None, default_vpc=True, default_subnet=True, test=True):
+    def __init__(self, region, vpc_id=None, subnet_id=None, default_vpc=True,
+                 default_subnet=True, iaminstance_name=None, test=True):
         self.ec2 = boto3.resource("ec2", region_name=region)
         self.client = boto3.client("ec2", region_name=region)
 
         self.vpc_id = self.get_default_vpc() if default_vpc else vpc_id
         self.subnet_id = self.get_default_subnet() if default_subnet else subnet_id
+        self.iaminstance_name = iaminstance_name
 
         if test:
             collection = self.ec2.instances.filter(Filters=[{"Name": "instance-state-name", "Values": ["running"]}])
@@ -246,6 +248,8 @@ class EC2(object):
                       BlockDeviceMappings=device_map)
         if self.subnet_id is not None and self.subnet_id != "":
             kwargs['SubnetId'] = self.subnet_id
+        if self.iaminstance_name is not None and self.iaminstance_name != "":
+            kwargs['IamInstanceProfile'] = {'Name': self.iaminstance_name}
         instances = self.ec2.create_instances(**kwargs)
 
         time.sleep(5)
