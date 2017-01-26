@@ -93,7 +93,7 @@ def cli(ctx):
               required=False,
               help="Root volume type")
 @click.option("--volume-size",
-              default=500,
+              default=8,
               show_default=True,
               required=False,
               help="Root volume size (GB)")
