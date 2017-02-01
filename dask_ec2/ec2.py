@@ -235,7 +235,7 @@ class EC2(object):
 
 
     def launch(self, name, image_id, instance_type, count, keyname,
-               spot_count = 1,
+               spot_count = 0,
                spot_price = "0.10",
                security_group_name=DEFAULT_SG_GROUP_NAME,
                security_group_id=None,
